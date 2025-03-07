@@ -4,6 +4,7 @@ import express from 'express';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import bootstrap from './main.server';
+import { initRedis, closeRedis } from './app/redis-config.server';
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
@@ -11,6 +12,17 @@ const indexHtml = join(serverDistFolder, 'index.server.html');
 
 const app = express();
 const commonEngine = new CommonEngine();
+
+let redisInitialized = false;
+async function setupRedis() {
+  try {
+    await initRedis();
+    redisInitialized = true;
+    console.log('Redis initialized successfully');
+  } catch (error) {
+    console.error('Failed to initialize Redis:', error);
+  }
+}
 
 /**
  * Example Express Rest API endpoints can be defined here.
@@ -31,8 +43,8 @@ app.get(
   '**',
   express.static(browserDistFolder, {
     maxAge: '1y',
-    index: 'index.html',
-  }),
+    index: 'index.html'
+  })
 );
 
 /**
@@ -47,7 +59,7 @@ app.get('**', (req, res, next) => {
       documentFilePath: indexHtml,
       url: `${protocol}://${headers.host}${originalUrl}`,
       publicPath: browserDistFolder,
-      providers: [{ provide: APP_BASE_HREF, useValue: baseUrl }],
+      providers: [{ provide: APP_BASE_HREF, useValue: baseUrl }]
     })
     .then((html) => res.send(html))
     .catch((err) => next(err));
@@ -59,8 +71,22 @@ app.get('**', (req, res, next) => {
  */
 if (isMainModule(import.meta.url)) {
   const port = process.env['PORT'] || 4000;
-  app.listen(port, () => {
-    console.log(`Node Express server listening on http://localhost:${port}`);
+
+  setupRedis().then(() => {
+    const server = app.listen(port, () => {
+      console.log(`Node Express server listening on http://localhost:${port}`);
+    });
+
+    process.on('SIGTERM', async () => {
+      console.log('SIGTERM signal received: closing HTTP server');
+      server.close(async () => {
+        console.log('HTTP server closed');
+        if (redisInitialized) {
+          await closeRedis();
+        }
+        process.exit(0);
+      });
+    });
   });
 }
 

@@ -1,0 +1,138 @@
+.weather-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.weather-form {
+  margin-bottom: 20px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .full-width {
+      width: 100%;
+    }
+
+    button {
+      align-self: flex-start;
+    }
+  }
+}
+
+.weather-info {
+  padding: 25px;
+  border-radius: 10px;
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+
+  .weather-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+    h2 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 500;
+    }
+
+    .weather-icon img {
+      width: 80px;
+      height: 80px;
+    }
+  }
+
+  .weather-details {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    .temperature {
+      display: flex;
+      flex-direction: column;
+
+      .temp-value {
+        font-size: 48px;
+        font-weight: 300;
+        line-height: 1;
+      }
+
+      .feels-like {
+        font-size: 14px;
+        opacity: 0.8;
+        margin-top: 5px;
+      }
+    }
+
+    .conditions {
+      .description {
+        font-size: 20px;
+        margin-bottom: 10px;
+      }
+
+      p {
+        display: flex;
+        align-items: center;
+        margin: 5px 0;
+        font-size: 16px;
+
+        i {
+          margin-right: 8px;
+        }
+      }
+    }
+  }
+}
+
+.clear-day {
+  background: linear-gradient(to bottom right, #4a90e2, #87cefa);
+  .weather-icon {
+    color: #ffeb3b;
+  }
+}
+
+.clear-night {
+  background: linear-gradient(to bottom right, #1a237e, #283593);
+  .weather-icon {
+    color: #ffeb3b;
+  }
+}
+
+.clouds-day {
+  background: linear-gradient(to bottom right, #78909c, #b0bec5);
+}
+
+.clouds-night {
+  background: linear-gradient(to bottom right, #37474f, #546e7a);
+}
+
+.rain {
+  background: linear-gradient(to bottom right, #546e7a, #78909c);
+  position: relative;
+  overflow: hidden;
+}
+
+.snow {
+  background: linear-gradient(to bottom right, #b3e5fc, #e1f5fe);
+  color: #37474f;
+}
+
+.thunderstorm {
+  background: linear-gradient(to bottom right, #263238, #37474f);
+  position: relative;
+}
+
+.atmosphere {
+  background: linear-gradient(to bottom right, #90a4ae, #cfd8dc);
+  color: #263238;
+}
